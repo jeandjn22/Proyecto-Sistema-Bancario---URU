@@ -12,16 +12,16 @@ El presente proyecto titulado "Sistema Bancario", ha sido desarrollado por Andre
 - ## 🛠️ Estructura del Código
 
 - El programa esta estructura por las siguientes funciones claves:
-- void menu(): Menu principal.
-- lista_clientes(): Visualizacion de la informacion de lo clientes.
-- buscar_clientes(): Busqueda de Clientes.
-- buscar_cliente_num_cuenta(): Busqueda de Cliente por su numero de cuenta.
-- buscar_cliente_nombre(): Busqueda de Cliente por su nombre.
-- buscar_cliente_ci(): Busqueda de Cliente por su numero de identificacion.
-- suspender_cuenta(): Suspender cuenta a un cliente.
-- realizar_transferencia(): Realizar transferencia a otro cliente.
-- deposito(): Deposito a una cuenta.
-- retiro(): Retiro.
+- `void menu()`: Menu principal.
+- `lista_clientes()`: Visualizacion de la informacion de lo clientes.
+- `buscar_clientes()`: Busqueda de Clientes.
+- `buscar_cliente_num_cuenta()`: Busqueda de Cliente por su numero de cuenta.
+- `buscar_cliente_nombre()`: Busqueda de Cliente por su nombre.
+- `buscar_cliente_ci()`: Busqueda de Cliente por su numero de identificacion.
+- `suspender_cuenta()`: Suspender cuenta a un cliente.
+- `realizar_transferencia()`: Realizar transferencia a otro cliente.
+- `deposito()`: Deposito a una cuenta.
+- `retiro()`: Retiro.
 
 - # 💻 Tecnologías Utilizadas
 
