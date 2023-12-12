@@ -9,7 +9,7 @@ El presente proyecto titulado "Sistema Bancario", ha sido desarrollado por Andre
 - **Registro como nuevo cliente:** Facilita el proceso de incorporación de nuevos clientes, capturando información esencial para la apertura de cuentas.
 - **Manejo de Suspension de Cuentas:** Permite la suspensión de cuentas existentes, con la opción de reactivarlas posteriormente. Proporciona un control sobre el estado de las cuentas de los clientes.
 
-- ## 🛠️ Estructura del Código
+  ## 🛠️ Estructura del Código
 
 - El programa esta estructura por las siguientes funciones claves:
 - `void menu()`: Menu principal.
@@ -23,12 +23,12 @@ El presente proyecto titulado "Sistema Bancario", ha sido desarrollado por Andre
 - `deposito()`: Deposito a una cuenta.
 - `retiro()`: Retiro.
 
-- # 💻 Tecnologías Utilizadas
+  # 💻 Tecnologías Utilizadas
 
 - **C++:** Lenguaje de programación.
 - **Archivos CSV:** Para el almacenamiento y gestión de datos.
 
-- # 👥 Autores
+  # 👥 Autores
 
 - **Andrés Pereira**
 - **Jean D'Joumblat**
