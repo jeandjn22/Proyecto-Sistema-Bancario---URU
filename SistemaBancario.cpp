@@ -17,12 +17,13 @@ void buscar_cliente_nombre();
 void buscar_cliente_ci();
 void suspender_cuenta();
 
-void realizar_transferencia();
+void transferencia();
 void deposito();
 void retiro();
 
 void agregar_cliente();
 void eliminar_cliente();
+void reactivar_cliente();
 
 
 //Funcion para Buscar los clientes
@@ -270,7 +271,7 @@ void suspender_cuenta() {
 
 
 
-void realizar_transferencia(){
+void transferencia(){
 
 
 
@@ -409,7 +410,7 @@ void agregar_cliente() {
 
 void eliminar_cliente(){
 
-    fstream archivo("clients.csv", ios::in);
+    ifstream archivo("clients.csv", ios::in);
     if(!archivo){
         cout<<"Error al abrir el archivo."<<endl<<endl;
     }else{
@@ -452,6 +453,63 @@ void eliminar_cliente(){
 
 }
 
+void reactivar_cliente() {
+    string ci_reactivar, cliente_reactivar;
+    cout << "Ingrese su ID de cliente: ";
+    cin >> ci_reactivar;
+    cin.ignore(); // Limpiar buffer
+    cout << "Ingrese el nombre del cliente a reactivar: ";
+    getline(cin, cliente_reactivar);
+
+    ifstream archivo_clientes("clients.csv");
+    ofstream temp_clientes("temp_clients.csv");
+    bool cliente_activado = false, cliente_encontrado = false;
+
+    string linea;
+    while (getline(archivo_clientes, linea)) {
+        stringstream ss(linea);
+        string ci, client, account_number, account_type, suspend, balance;
+        getline(ss, ci, ',');
+        getline(ss, client, ',');
+        getline(ss, account_number, ',');
+        getline(ss, account_type, ',');
+        getline(ss, suspend, ',');
+        getline(ss, balance, ',');
+
+        if (client == cliente_reactivar && ci == ci_reactivar) {
+            cliente_encontrado = true;
+            if (suspend == "false") {
+                cliente_activado = true;
+
+                // Actualizar la información del cliente a "Activado"
+                temp_clientes << ci << ',' << client << ',' << account_number << ',' << 
+                account_type << ',' << "true" << ',' << balance << '\n';
+
+            } else {
+                temp_clientes << linea << '\n';
+            }
+        } else {
+            temp_clientes << linea << '\n';
+        }
+    }
+
+    archivo_clientes.close();
+    temp_clientes.close();
+    remove("clients.csv");
+    rename("temp_clients.csv", "clients.csv");
+
+    if (!cliente_encontrado) {
+        cout << "Cliente no encontrado en el registro." << endl;
+        return;
+    }
+    if (!cliente_activado) {
+        cout << "Este cliente ya tiene su cuenta activada." << endl;
+        return;
+    }
+
+    cout << "Cliente reactivado exitosamente." << endl;
+}
+
 
 void lista_clientes() {
     ifstream archivo("clients.csv", ios::in);
@@ -490,8 +548,6 @@ void lista_clientes() {
     }
 }
 
-
-
 void menu(){
     int opcion;
     do
@@ -501,9 +557,11 @@ void menu(){
         cout<<"2. Buscar Clientes "<<endl;
         cout<<"3. Suspender cuenta a cliente "<<endl;
         cout<<"4. Realizar Transferencia a Cliente "<<endl;
-        cout<<"5. Deposito o Retiro" <<endl;
-        cout<<"6. Registrarse como cliente. "<<endl;
-        cout<<"7. Eliminar informacion de un cliente."<<endl;
+        cout<<"5. Deposito." <<endl;
+        cout<<"6. Retiro. "<<endl;
+        cout<<"7. Registrarse como cliente."<<endl;
+        cout<<"8. Eliminar informacion de un cliente."<<endl;
+        cout<<"9. Reactivar cuenta a cliente."<<endl;
         cout<<"0. Salir"<<endl;
         cout<<"Selecciona una opcion: ";
         cin>>opcion;
@@ -519,10 +577,12 @@ void menu(){
             case 1: lista_clientes(); break;
             case 2: buscar_clientes(); break;
             case 3: suspender_cuenta(); break;
-            case 4: break;
-            case 5: break;
-            case 6: agregar_cliente(); break;
-            case 7: break;
+            case 4: transferencia(); break;
+            case 5: deposito(); break;
+            case 6: retiro(); break;
+            case 7: agregar_cliente(); break;
+            case 8: eliminar_cliente(); break;
+            case 9: reactivar_cliente(); break;
             case 0: cout<<"GRACIAS POR USAR EL PROGRAMA!"<<endl; break;
             default: cout<<"Opcion invalida. Selecciona una correcta: "<<endl;
         }
