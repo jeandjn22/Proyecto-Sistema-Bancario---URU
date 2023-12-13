@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <limits>
-#include <cctype> // Agregamos la biblioteca para usar isdigit
+#include <cctype> 
 #include <vector>
 
 using namespace std;
@@ -16,13 +16,12 @@ void buscar_cliente_num_cuenta();
 void buscar_cliente_nombre();
 void buscar_cliente_ci();
 void suspender_cuenta();
-
-void realizar_transferencia();
+void transferencia();
 void deposito();
 void retiro();
-
 void agregar_cliente();
 void eliminar_cliente();
+void seleccionar_transaccion();
 
 
 //Funcion para Buscar los clientes
@@ -270,33 +269,250 @@ void suspender_cuenta() {
 
 
 
-void realizar_transferencia(){
 
+void transferencia() {
+    fstream archivo("clients.csv", ios::in);
+    if (!archivo) {
+        cout << "Error al abrir el archivo" << endl;
+        return;
+    }
 
+    vector<string> lineas;
+    string linea;
+    while (getline(archivo, linea)) {
+        lineas.push_back(linea);
+    }
+    archivo.close();
 
+    string cuentaOrigen, cuentaDestino;
+    float montoTransferencia;
+    cout << "Ingrese el numero de cuenta origen: ";
+    cin >> cuentaOrigen;
+    cout << "Ingrese el numero de cuenta destino: ";
+    cin >> cuentaDestino;
+    cout << "Ingrese el monto a transferir: ";
+    cin >> montoTransferencia;
 
+    if (montoTransferencia <= 0) {
+        cout << "El monto a transferir debe ser mayor a 0." << endl;
+        return;
+    }
 
+    bool cuentaOrigenEncontrada = false, cuentaDestinoEncontrada = false;
+    float saldoOrigen, saldoDestino;
 
+    for (auto& linea : lineas) {
+        stringstream ss(linea);
+        string ci, nombre, numeroCuenta, tipoCuenta, suspendida, balanceStr;
+        getline(ss, ci, ';');
+        getline(ss, nombre, ';');
+        getline(ss, numeroCuenta, ';');
+        getline(ss, tipoCuenta, ';');
+        getline(ss, suspendida, ';');
+        getline(ss, balanceStr, ';');
+
+        if (numeroCuenta == cuentaOrigen && suspendida == "false") {
+            cuentaOrigenEncontrada = true;
+            saldoOrigen = stof(balanceStr);
+            if (montoTransferencia > saldoOrigen) {
+                cout << "Fondos insuficientes para realizar la transferencia." << endl;
+                return;
+            }
+        } else if (numeroCuenta == cuentaDestino && suspendida == "false") {
+            cuentaDestinoEncontrada = true;
+            saldoDestino = stof(balanceStr);
+        }
+    }
+
+    if (!cuentaOrigenEncontrada || !cuentaDestinoEncontrada) {
+        cout << "Una o ambas cuentas no se encuentran o están suspendidas." << endl;
+    } else {
+        // Realizar la transferencia
+        for (auto& linea : lineas) {
+            stringstream ss(linea);
+            string ci, nombre, numeroCuenta, tipoCuenta, suspendida, balanceStr;
+            getline(ss, ci, ';');
+            getline(ss, nombre, ';');
+            getline(ss, numeroCuenta, ';');
+            getline(ss, tipoCuenta, ';');
+            getline(ss, suspendida, ';');
+            getline(ss, balanceStr, ';');
+
+            if (numeroCuenta == cuentaOrigen) {
+                float nuevoSaldo = stof(balanceStr) - montoTransferencia;
+                linea = ci + ";" + nombre + ";" + numeroCuenta + ";" + tipoCuenta + ";" + suspendida + ";" + to_string(nuevoSaldo);
+            } else if (numeroCuenta == cuentaDestino) {
+                float nuevoSaldo = stof(balanceStr) + montoTransferencia;
+                linea = ci + ";" + nombre + ";" + numeroCuenta + ";" + tipoCuenta + ";" + suspendida + ";" + to_string(nuevoSaldo);
+            }
+        }
+
+        // Actualizar el archivo CSV
+        archivo.open("clients.csv", ios::out | ios::trunc);
+        for (const auto& lineaActualizada : lineas) {
+            archivo << lineaActualizada << "\n";
+        }
+        archivo.close();
+
+        cout << "Transferencia realizada exitosamente." << endl;
+    }
 }
 
 
-void deposito(){
+
+void deposito() {
+    fstream archivo("clients.csv", ios::in);
+    if (!archivo) {
+        cout << "Error al abrir el archivo" << endl;
+        return;
+    }
+
+    vector<string> lineas;
+    string linea;
+    while (getline(archivo, linea)) {
+        lineas.push_back(linea);
+    }
+    archivo.close();
+
+    string cuentaDeposito;
+    float montoDeposito;
+    cout << "Ingrese el numero de cuenta para el deposito: ";
+    cin >> cuentaDeposito;
+    cout << "Ingrese el monto a depositar: ";
+    cin >> montoDeposito;
+
+    if (montoDeposito <= 0) {
+        cout << "El monto a depositar debe ser mayor a 0." << endl;
+        return;
+    }
+
+    bool cuentaEncontrada = false;
+    for (auto& linea : lineas) {
+        stringstream ss(linea);
+        string ci, nombre, numeroCuenta, tipoCuenta, suspendida, balanceStr;
+        getline(ss, ci, ';');
+        getline(ss, nombre, ';');
+        getline(ss, numeroCuenta, ';');
+        getline(ss, tipoCuenta, ';');
+        getline(ss, suspendida, ';');
+        getline(ss, balanceStr, ';');
+
+        if (numeroCuenta == cuentaDeposito && suspendida == "false") {
+            cuentaEncontrada = true;
+            float balance = stof(balanceStr);
+
+            balance += montoDeposito;
+            cout << "Deposito realizado. Titular: " << nombre << endl;
+            stringstream balanceActualizado;
+            balanceActualizado << balance;
+            linea = ci + ";" + nombre + ";" + numeroCuenta + ";" + tipoCuenta + ";" + suspendida + ";" + balanceActualizado.str();
+            break;
+        }
+    }
+
+    if (!cuentaEncontrada) {
+        cout << "Cuenta no encontrada o suspendida." << endl;
+    } else {
+        archivo.open("clients.csv", ios::out | ios::trunc);
+        for (const auto& lineaActualizada : lineas) {
+            archivo << lineaActualizada << "\n";
+        }
+        archivo.close();
+    }
+}
 
 
+void retiro() {
+    fstream archivo("clients.csv", ios::in);
+    if (!archivo) {
+        cout << "Error al abrir el archivo" << endl;
+        return;
+    }
 
+    vector<string> lineas;
+    string linea;
+    while (getline(archivo, linea)) {
+        lineas.push_back(linea);
+    }
+    archivo.close();
 
+    string cuentaRetiro;
+    float montoRetiro;
+    cout << "Ingrese el numero de cuenta para el retiro: ";
+    cin >> cuentaRetiro;
+    cout << "Ingrese el monto a retirar: ";
+    cin >> montoRetiro;
 
+    if (montoRetiro <= 0) {
+        cout << "El monto a retirar debe ser mayor a 0." << endl;
+        return;
+    }
+
+    bool cuentaEncontrada = false;
+    for (auto& linea : lineas) {
+        stringstream ss(linea);
+        string ci, nombre, numeroCuenta, tipoCuenta, suspendida, balanceStr;
+        getline(ss, ci, ';');
+        getline(ss, nombre, ';');
+        getline(ss, numeroCuenta, ';');
+        getline(ss, tipoCuenta, ';');
+        getline(ss, suspendida, ';');
+        getline(ss, balanceStr, ';');
+
+        if (numeroCuenta == cuentaRetiro && suspendida == "false") {
+            cuentaEncontrada = true;
+            float balance = stof(balanceStr);
+            if (montoRetiro > balance) {
+                cout << "Fondos insuficientes para realizar el retiro." << endl;
+                return;
+            }
+
+            balance -= montoRetiro;
+            cout << "Retiro realizado. Titular: " << nombre << endl;
+            stringstream balanceActualizado;
+            balanceActualizado << balance;
+            linea = ci + ";" + nombre + ";" + numeroCuenta + ";" + tipoCuenta + ";" + suspendida + ";" + balanceActualizado.str();
+            break;
+        }
+    }
+
+    if (!cuentaEncontrada) {
+        cout << "Cuenta no encontrada o suspendida." << endl;
+    } else {
+        archivo.open("clients.csv", ios::out | ios::trunc);
+        for (const auto& lineaActualizada : lineas) {
+            archivo << lineaActualizada << "\n";
+        }
+        archivo.close();
+    }
 }
 
 
 
-void retiro(){
+void seleccionar_transaccion() {
+    int opcion;
+    cout << "Seleccione la transacción que desea realizar:" << endl;
+    cout << "1. Depositar" << endl;
+    cout << "2. Retirar" << endl;
+    cin >> opcion;
 
-
-
-
-
+    switch(opcion) {
+        case 1:
+            deposito();
+            break;
+        case 2:
+            retiro();
+            break;
+        default:
+            cout << "Opción no válida" << endl;
+            break;
+    }
 }
+
+
+
+
+
 
 bool existe_cliente(const string& ci, const string& client, const string& account_number, ifstream& archivo) {
     string linea;
@@ -409,47 +625,6 @@ void agregar_cliente() {
 
 void eliminar_cliente(){
 
-    fstream archivo("clients.csv", ios::in);
-    if(!archivo){
-        cout<<"Error al abrir el archivo."<<endl<<endl;
-    }else{
-        vector<string> registros_no_eliminar;
-        string linea;
-        string ci, client, account_number, account_type, suspend, balance;
-        string id_cliente_eliminar;
-        cout<<"Ingrese el numero de ID del cliente a eliminar: "<<endl;
-        cin>>id_cliente_eliminar;
-        bool existe = false;
-
-        while(getline(archivo, linea)){
-            stringstream llave(linea);
-
-            getline(llave, ci, ',');
-            getline(llave, client, ',');
-            getline(llave, account_number, ',');
-            getline(llave, account_type, ',');
-            getline(llave, suspend, ',');
-            getline(llave, balance, ',');
-
-            if(id_cliente_eliminar.compare(ci) == 0) existe = true;
-            else registros_no_eliminar.push_back(linea);
-        }//fin del while
-
-        archivo.close();
-
-        if(existe){//if(existe == true)
-            ofstream nuevo("clients.csv");
-            for(int i = 0; i < int(registros_no_eliminar.size()); i++){
-                 nuevo<<registros_no_eliminar[i]<<endl;
-            }
-            nuevo.close();
-            cout<<"Se elimino el cliente correctamente"<<endl<<endl;
-        }else{
-            cout<<"El cliente con numero de ID "<<id_cliente_eliminar<<
-                  " no existe en el archivo"<<endl<<endl;
-        }
-    }
-
 }
 
 
@@ -519,8 +694,8 @@ void menu(){
             case 1: lista_clientes(); break;
             case 2: buscar_clientes(); break;
             case 3: suspender_cuenta(); break;
-            case 4: break;
-            case 5: break;
+            case 4: transferencia(); break;
+            case 5: seleccionar_transaccion(); break;
             case 6: agregar_cliente(); break;
             case 7: break;
             case 0: cout<<"GRACIAS POR USAR EL PROGRAMA!"<<endl; break;
