@@ -1,0 +1,498 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <fstream>
+#include <sstream>
+#include <limits>
+#include <cctype> // Agregamos la biblioteca para usar isdigit
+
+using namespace std;
+
+void menu();
+void lista_clientes();
+void buscar_clientes();
+void buscar_cliente_num_cuenta();
+void buscar_cliente_nombre();
+void buscar_cliente_ci();
+void suspender_cuenta();
+
+void realizar_transferencia();
+void deposito();
+void retiro();
+
+void agregar_cliente();
+void eliminar_cliente();
+
+
+//Funcion para Buscar los clientes
+void buscar_clientes(){
+    int opcion_buscar_clientes;
+    do
+    {
+        cout<<"--------OPCIONES PARA BUSCAR AL CLIENTE---------"<<endl;
+        cout<<"1. Buscar cliente por Numero de Cuenta: "<<endl;
+        cout<<"2. Buscar cliente por Nombre: "<<endl;
+        cout<<"3. Buscar cliente por Numero de Identificacion: "<<endl;
+        cout<<"0. Regresar "<<endl;
+        cout<<"Selecciona una opcion: "<<endl;
+        cin>>opcion_buscar_clientes;
+
+        switch(opcion_buscar_clientes){
+            case 1: buscar_cliente_num_cuenta(); break;
+            case 2: buscar_cliente_nombre(); break;
+            case 3: buscar_cliente_ci(); break;
+            case 0: cout<<" "<<endl; break;
+            default: cout<<"Opcion incorrecta"<<endl;
+        }
+    }while(opcion_buscar_clientes!=0);
+}
+
+//Funcion para Buscar el Cliente por su Numero de Cuenta
+void buscar_cliente_num_cuenta() {
+    ifstream archivo("clients.csv", ios::in);
+
+    if (!archivo) {
+        cout << "No se puede abrir el archivo" << endl;
+    } else {
+        string linea;
+        string ci, client, account_number, account_type, suspend, balance;
+        string numero_cuenta_buscar;
+
+        cout << "Ingresa el numero de cuenta del cliente que desea buscar: ";
+        cin >> numero_cuenta_buscar;
+
+        bool numero_cuenta_existe = false;
+
+        // Lee la primera línea (cabecera) y la descarta
+        getline(archivo, linea);
+
+        while (getline(archivo, linea)) {
+            stringstream llave(linea);
+
+            getline(llave, ci, ',');
+            getline(llave, client, ',');
+            getline(llave, account_number, ',');
+            getline(llave, account_type, ',');
+            getline(llave, suspend, ',');
+            getline(llave, balance, ',');
+
+            if (numero_cuenta_buscar.compare(account_number) == 0) {
+                numero_cuenta_existe = true;
+                cout << "----------------------------------------------------" << endl;
+                cout << "ID: " << ci << endl;
+                cout << "Cliente: " << client << endl;
+                cout << "Numero de cuenta: " << account_number << endl;
+                cout << "Tipo de cuenta: " << account_type << endl;
+                cout << "Suspender: " << suspend << endl;
+                cout<<"Saldo Disponible: "<<balance<<endl;
+                cout << "----------------------------------------------------" << endl;
+            }
+        }
+
+        archivo.close();
+
+        if (!numero_cuenta_existe) {
+            cout << "El cliente con numero de cuenta: " << numero_cuenta_buscar << " no existe." << endl << endl;
+        }
+    }
+}
+
+
+//Funcion para buscar al cliente por su nombre
+void buscar_cliente_nombre() {
+    ifstream archivo("clients.csv");
+    if (!archivo) {
+        cout << "No se puede abrir el archivo" << endl;
+    } else {
+        string linea;
+        string ci, client, account_number, account_type, suspend, balance;
+        string nombre_cliente_buscar;
+
+        cout << "Ingrese el nombre completo del cliente a buscar: ";
+        cin.ignore(); // Ignorar el salto de línea anterior
+        getline(cin, nombre_cliente_buscar);
+
+        bool nombre_encontrado = false;
+
+        while (getline(archivo, linea)) {
+            stringstream llave(linea);
+
+            getline(llave, ci, ',');
+            getline(llave, client, ',');
+            getline(llave, account_number, ',');
+            getline(llave, account_type, ',');
+            getline(llave, suspend, ',');
+            getline(llave, balance, ',');
+            
+
+            if (nombre_cliente_buscar.compare(client)==0) { // Se compara el nombre ingresado con el nombre del cliente registrado para ver si existe
+                nombre_encontrado = true;
+
+                cout<<"----------------------------------------------------" << endl;
+                cout<<"ID: " << ci << endl;
+                cout<<"Cliente: " << client << endl;
+                cout<<"Numero de cuenta: " << account_number << endl;
+                cout<<"Tipo de cuenta: " << account_type << endl;
+                cout<<"Estado de Cuenta: " << suspend << endl;
+                cout<<"Saldo Disponible: "<< balance <<endl;
+                cout << "----------------------------------------------------" << endl;
+            }
+        }
+        archivo.close();
+        if (!nombre_encontrado) { // Verificar si el nombre no se encontró
+            cout << "El cliente con el nombre: " << nombre_cliente_buscar << " no existe." << endl << endl;
+        }
+    }
+}
+
+//Funcion para buscar al cliente por su numero de identificacion 
+void buscar_cliente_ci() {
+    ifstream archivo("clients.csv", ios::in);
+
+    if (!archivo) {
+        cout<<"No se puede abrir el archivo"<<endl;
+    } else {
+        string linea;
+        string ci, client, account_number, account_type, suspend, balance;
+        string numero_cedula_buscar;
+
+        cout<<"Ingresa el numero de identificacion del cliente que desea buscar: ";
+        cin>>numero_cedula_buscar;
+
+        bool numero_cedula_existe = false;
+
+        // Lee la primera línea (cabecera) y la descarta
+        getline(archivo, linea);
+
+        while (getline(archivo, linea)) {
+            stringstream llave(linea);
+
+            getline(llave, ci, ',');
+            getline(llave, client, ',');
+            getline(llave, account_number, ',');
+            getline(llave, account_type, ',');
+            getline(llave, suspend, ',');
+            getline(llave, balance, ',');
+
+            if (numero_cedula_buscar.compare(ci) == 0) { //Compara el numero de identificacion ingresado, con el numero de indetificacion registrado
+                numero_cedula_existe = true;
+                cout<<"----------------------------------------------------" << endl;
+                cout<<"ID: " << ci << endl;
+                cout<<"Cliente: " << client << endl;
+                cout<<"Numero de cuenta: " << account_number << endl;
+                cout<<"Tipo de cuenta: " << account_type << endl;
+                cout<<"Estado de Cuenta: " << suspend << endl;
+                cout<<"Saldo Disponible: "<<balance<<endl;
+                cout << "----------------------------------------------------" << endl;
+            }
+        }
+
+        archivo.close();
+
+        if (!numero_cedula_existe) { //En caso de que el numero de identificacion no exista
+            cout << "El cliente con numero de ID: " << numero_cedula_buscar << " no existe." << endl << endl;
+        }
+    }
+}
+
+
+//Funcion para suspender cuenta a cliente
+void suspender_cuenta() {
+    // Abre el archivo en modo lectura y escritura
+    fstream archivo("clients.csv", ios::in | ios::out);
+
+    if (!archivo) {
+        cout << "Error al abrir el archivo" << endl;
+        return;
+    }
+
+    string lineas;
+    string ci, client, account_number, account_type, suspend, balance;
+    string num_ci_a_buscar;
+
+    cout << "Ingrese el numero de identificacion del cliente a suspender: ";
+    cin >> num_ci_a_buscar;
+    cout << endl;
+
+    bool clienteEncontrado = false;
+
+    while (getline(archivo, lineas)) {
+        stringstream llave(lineas);
+        getline(llave, ci, ',');
+        getline(llave, client, ',');
+        getline(llave, account_number, ',');
+        getline(llave, account_type, ',');
+        getline(llave, suspend, ',');
+        getline(llave, balance, ',');
+
+        if (num_ci_a_buscar.compare(ci)==0 && suspend !="false") {
+            clienteEncontrado = true;
+
+            cout << "ID: " << ci << endl;
+            cout << "Cliente: " << client << endl;
+            cout << "Numero de Cuenta: " << account_number << endl;
+            cout << "Tipo de Cuenta: " << account_type << endl;
+            cout << "Estado actual: " << suspend << endl;
+            cout << "Saldo Disponible: " << balance << endl;
+            cout << "Desea Suspender al Cliente? s/n : ";
+                
+            char opcion;
+            cin >> opcion;
+
+            if (opcion == 's' || opcion == 'S') {
+                cout << endl;
+                cout << "Cliente Suspendido Correctamente!" << endl;
+
+                // Mueve el puntero al principio de la línea a modificar
+                archivo.seekp(llave.tellg(), ios::beg);
+
+                // Modifica el valor de suspend a "false" en el archivo original
+                archivo << ci << ',' << client << ',' << account_number << ',' << account_type << ','
+                        << "false" << ',' << balance << '\n';
+
+                // No es necesario cerrar y volver a abrir el archivo
+                break;  // Termina el bucle ya que se encontró y suspendió al cliente
+            } else {
+                cout << endl;
+                cout << "Operacion Cancelada!!" << endl;
+                return;
+            }
+        }
+    }
+
+    archivo.close();
+
+    if (!clienteEncontrado) {
+        cout << "El cliente no fue encontrado. Por favor, revisa el numero de identificacion." << endl;
+    }
+}
+
+
+
+void realizar_transferencia(){
+
+
+
+
+
+
+}
+
+
+void deposito(){
+
+
+
+
+
+}
+
+
+
+void retiro(){
+
+
+
+
+
+}
+
+bool existe_cliente(const string& ci, const string& client, const string& account_number, ifstream& archivo) {
+    string linea;
+    while (getline(archivo, linea)) {
+        stringstream llave(linea);
+        string current_ci, current_client, current_account_number;
+        getline(llave, current_ci, ',');
+        getline(llave, current_client, ',');
+        getline(llave, current_account_number, ',');
+        if (!ci.empty() && ci == current_ci) {
+            return true; // El cliente ya existe con el mismo ID
+        }
+        if (!client.empty() && client.compare(current_client) == 0) {
+            return true; // El cliente ya existe con el mismo nombre
+        }
+        if (!account_number.empty() && account_number.compare(current_account_number) == 0) {
+            return true; // El cliente ya existe con ese numero de cuenta
+        }
+    }
+    return false; // El cliente no existe
+}
+
+//Funcion para que solo se acepten numeros en el ID
+bool contiene_letras(const string& str) {
+    for (char c : str) {
+        if (isalpha(c)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void agregar_cliente() {
+    ifstream lectura("clients.csv", ios::in);
+    ofstream escritura("clients.csv", ios::app); // Abre el archivo en modo append
+
+    if (!lectura || !escritura) {
+        cout << "No se puede abrir el archivo" << endl;
+    } else {
+        string ci, name, account_number, account_type, suspend, balance;
+
+        cout << "Ingrese su ID para registrarse: " << endl;
+        cin.ignore();
+        getline(cin, ci);
+
+        // Verificar si el ID contiene solo números
+        while (!ci.empty() && ci.find_first_not_of("0123456789") != string::npos) {
+            cout << "El ID debe contener solo dígitos. Por favor, ingrese un ID válido:" << endl;
+            getline(cin, ci);
+        }
+
+        if (existe_cliente(ci, "", "", lectura)) {
+            cout << "Ya existe un cliente con ese ID. Por favor ingrese uno valido." << endl;
+            return;
+        }
+
+        cout << "Ingrese su nombre completo: " << endl;
+        getline(cin, name);
+
+        if (existe_cliente("", name, "", lectura)) {
+            cout << "Ya existe un cliente con ese nombre. Por favor ingrese uno valido." << endl;
+            return;
+        }
+
+        cout << "Ingrese el tipo de cuenta (Cuenta Debito o Cuenta Credito): " << endl;
+        cout << "Coloque 'credit' o 'debit': " << endl;
+        getline(cin, account_type);
+
+        // Verificar si la entrada del usuario es válida
+        while (account_type != "credit" && account_type != "debit") {
+            cout << "Tipo de cuenta no valido. Por favor, ingrese 'credit' o 'debit':" << endl;
+            getline(cin, account_type);
+        }
+
+        if (existe_cliente("", "", account_type, lectura)) {
+            cout << "Ya existe un cliente con ese tipo de cuenta. Por favor ingrese uno valido." << endl;
+            return;
+        }
+
+        cout<<"Pasos para crear su numero de cuenta: "<<endl;
+        cout<<"1. Coloque principalmente 000."<<endl;
+        cout<<"2. Seguido de 000 coloque su ID."<<endl;
+        cout << "Ingrese su numero de cuenta: " << endl;
+        getline(cin, account_number);
+
+        while (!account_number.empty() && account_number.find_first_not_of("0123456789") != string::npos) {
+            cout << "El numero de cuenta debe contener solo dígitos. Por favor, ingrese un valor valido:" << endl;
+            getline(cin, account_number);
+        }
+
+        if (existe_cliente("", "", account_number, lectura)) {
+            cout << "Ya existe un cliente con ese numero de cuenta. Por favor ingrese uno valido." << endl;
+            return;
+        }
+
+        suspend = "true";
+        balance = "500$";
+
+        escritura << ci << ',' << name << ',' << account_number << ',' << account_type << ',' << suspend << ','
+                  << balance << '\n';
+
+        cout << "El cliente ha sido registrado exitosamente." << endl;
+    }
+
+    lectura.close();
+    escritura.close();
+}
+
+
+void eliminar_cliente(){
+
+}
+
+
+void lista_clientes() {
+    ifstream archivo("clients.csv", ios::in);
+
+    if (!archivo) {
+        cout<<"No se puede abrir el archivo"<<endl;
+    } else {
+        string linea;
+        string ci, client, account_number, account_type, suspend, balance;
+
+        // Lee la primera línea (cabecera) y la descarta
+        getline(archivo, linea);
+
+        while (getline(archivo, linea)) {
+            stringstream llave(linea);
+
+            getline(llave, ci, ',');
+            getline(llave, client, ',');
+            getline(llave, account_number, ',');
+            getline(llave, account_type, ',');
+            getline(llave, suspend, ',');
+            getline(llave, balance, ',');
+
+
+            cout << "----------------------------------------------------" << endl;
+            cout << "ID: " << ci << endl;
+            cout << "Cliente: " << client << endl;
+            cout << "Numero de cuenta: " << account_number << endl;
+            cout << "Tipo de cuenta: " << account_type << endl;
+            cout << "Estado de Cuenta: " << suspend << endl;
+            cout<<"Saldo Disponible: "<<balance<<endl;
+            cout << "----------------------------------------------------" << endl;
+        }
+
+        archivo.close();
+    }
+}
+
+
+
+void menu(){
+    int opcion;
+    do
+    {
+        cout<<"------------------MENU-------------------"<<endl;
+        cout<<"1. Visualizar Lista De Clientes "<<endl;
+        cout<<"2. Buscar Clientes "<<endl;
+        cout<<"3. Suspender cuenta a cliente "<<endl;
+        cout<<"4. Realizar Transferencia a Cliente "<<endl;
+        cout<<"5. Deposito o Retiro" <<endl;
+        cout<<"6. Registrarse como cliente. "<<endl;
+        cout<<"7. Eliminar informacion de un cliente."<<endl;
+        cout<<"0. Salir"<<endl;
+        cout<<"Selecciona una opcion: ";
+        cin>>opcion;
+
+        while (cin.fail() || opcion < 0) {
+            cin.clear(); // Limpiar el estado de error
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar el resto de la línea
+            cout << "Opcion Invalida. Selecciona una correcta: ";
+            cin >> opcion;
+        }
+
+        switch(opcion){
+            case 1: lista_clientes(); break;
+            case 2: buscar_clientes(); break;
+            case 3: suspender_cuenta(); break;
+            case 4: break;
+            case 5: break;
+            case 6: agregar_cliente(); break;
+            case 7: break;
+            case 0: cout<<"GRACIAS POR USAR EL PROGRAMA!"<<endl; break;
+            default: cout<<"Opcion invalida. Selecciona una correcta: "<<endl;
+        }
+    }while(opcion!=0);
+    
+}
+
+int main() {
+    
+    menu();
+    return 0;
+}
+
+
+
