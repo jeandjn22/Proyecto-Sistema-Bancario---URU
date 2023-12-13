@@ -264,13 +264,6 @@ void suspender_cuenta() {
     }
 }
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-
-using namespace std;
-
 void reactivar_cuenta() {
     try {
         fstream archivo("clients.csv", ios::in | ios::out);
