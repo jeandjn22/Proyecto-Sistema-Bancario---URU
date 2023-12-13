@@ -1,42 +1,29 @@
 # Proyecto-Sistema-Bancario-URU
 
-## 💵 Presentacion Del Proyecto
-El presente proyecto titulado "Sistema Bancario", ha sido desarrollado por Andres Pereira y Jean D'Joumblat, proyecto que ha sido desarrollado en el curso de Programacion 2 ofrecido por la Universidad Rafael Urdaneta en su período académico 2023C. Detallamente este programa proporcionara el manejo de archivos csv, funciones, caracteristicas especificas que posee un sistema bancario y multiples opciones implementadas en el programa.
+## 💵 Presentación Del Proyecto
+Este proyecto, titulado "Sistema Bancario", es una obra de Andrés Pereira y Jean D'Joumblat, creado como parte del curso de Programación 2 en la Universidad Rafael Urdaneta, durante el período académico 2023C. Este programa incorpora el manejo de archivos CSV, funciones clave, y características específicas de un sistema bancario, enriquecido con múltiples opciones para el manejo efectivo de un banco.
 
-## ✏️ Caracteristicas Principales 
-- **Visualización de Información de Clientes:** Muestra los detalles relevantes de un cliente, como ID, nombre, número de cuenta, tipo de cuenta, estado y saldo disponible.
-- **Operaciones de Trasnferencia, Deposito y Retiro:** Permite realizar transacciones financieras, como transferencias entre cuentas, depósitos y retiros de fondos.
-- **Registro como nuevo cliente:** Facilita el proceso de incorporación de nuevos clientes, capturando información esencial para la apertura de cuentas.
-- **Manejo de Suspension de Cuentas:** Permite la suspensión de cuentas existentes, con la opción de reactivarlas posteriormente. Proporciona un control sobre el estado de las cuentas de los clientes.
+## ✏️ Características Principales
+- **Visualización de Información de Clientes:** Acceso a detalles importantes de los clientes como ID, nombre, número de cuenta, tipo de cuenta, estado y saldo.
+- **Operaciones de Transferencia, Depósito y Retiro:** Realización de transacciones financieras, incluyendo transferencias entre cuentas, depósitos y retiros de fondos.
+- **Registro de Nuevos Clientes:** Proceso simplificado para añadir nuevos clientes al sistema bancario.
+- **Manejo de Suspensión y Reactivación de Cuentas:** Funciones para suspender y reactivar cuentas de clientes, utilizando sentencias `try-catch` para manejar excepciones y asegurar un funcionamiento robusto y seguro.
 
-  ## 🛠️ Estructura del Código
+## 🛠️ Estructura del Código
+- **Funciones Clave:**
+  - `void menu()`: Menú principal con todas las opciones.
+  - `lista_clientes()`: Muestra información detallada de los clientes.
+  - `buscar_clientes()`, `buscar_cliente_num_cuenta()`, `buscar_cliente_nombre()`, `buscar_cliente_ci()`: Funciones para buscar clientes.
+  - `suspender_cuenta()`, `reactivar_cuenta()`: Funciones para suspender y reactivar cuentas, implementando sentencias `try-catch` para el manejo de errores y excepciones.
 
-- El programa esta estructura por las siguientes funciones claves:
-- `void menu()`: Menu principal.
-- `lista_clientes()`: Visualizacion de la informacion de lo clientes.
-- `buscar_clientes()`: Busqueda de Clientes.
-- `buscar_cliente_num_cuenta()`: Busqueda de Cliente por su numero de cuenta.
-- `buscar_cliente_nombre()`: Busqueda de Cliente por su nombre.
-- `buscar_cliente_ci()`: Busqueda de Cliente por su numero de identificacion.
-- `suspender_cuenta()`: Suspender cuenta a un cliente.
-- `realizar_transferencia()`: Realizar transferencia a otro cliente.
-- `deposito()`: Deposito a una cuenta.
-- `retiro()`: Retiro.
+## 💻 Tecnologías Utilizadas
+- **C++:** Lenguaje de programación utilizado para desarrollar el sistema.
+- **Archivos CSV:** Empleados para almacenar y gestionar datos de clientes y transacciones.
 
-  # 💻 Tecnologías Utilizadas
-
-- **C++:** Lenguaje de programación.
-- **Archivos CSV:** Para el almacenamiento y gestión de datos.
-
-  # 👥 Autores
-
+## 👥 Autores
 - **Andrés Pereira**
 - **Jean D'Joumblat**
 
 ## 📝 Notas Adicionales
-
-Este proyecto es el resultado de una asignación educativa y ha sido creado con fines exclusivamente académicos. Su desarrollo destaca habilidades en programación en C++, gestión de archivos y creación de aplicaciones de gestión. Apreciamos la oportunidad de compartir este proyecto y esperamos que sirva como ejemplo de creatividad en el ámbito académico.
-
----
-
+Este proyecto representa un esfuerzo académico en la Universidad Rafael Urdaneta y ha sido diseñado con el propósito de demostrar habilidades en programación en C++, manejo de archivos y desarrollo de aplicaciones de gestión bancaria. Agradecemos la oportunidad de presentar este trabajo y esperamos que sirva de inspiración y referencia para futuros proyectos en el campo.
 
