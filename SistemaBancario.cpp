@@ -591,9 +591,9 @@ bool existe_cliente(const string& ci, const string& client, const string& accoun
     while (getline(archivo, linea)) {
         stringstream llave(linea);
         string current_ci, current_client, current_account_number;
-        getline(llave, current_ci, ',');
-        getline(llave, current_client, ',');
-        getline(llave, current_account_number, ',');
+        getline(llave, current_ci, ';');
+        getline(llave, current_client, ';');
+        getline(llave, current_account_number, ';');
         if (!ci.empty() && ci == current_ci) {
             return true; // El cliente ya existe con el mismo ID
         }
