@@ -747,42 +747,67 @@ void eliminar_cliente(){
 
 
 void lista_clientes() {
-    ifstream archivo("clients.csv", ios::in);
+    try {
+        ifstream archivo("clients.csv", ios::in);
 
-    if (!archivo) {
-        cout<<"No se puede abrir el archivo"<<endl;
-    } else {
-        string linea;
-        string ci, client, account_number, account_type, suspend, balance;
+        if (!archivo) {
+            throw runtime_error("No se puede abrir el archivo");
+        } else {
+            string linea;
+            string ci, client, account_number, account_type, suspend, balance;
 
-        // Lee la primera línea (cabecera) y la descarta
-        getline(archivo, linea);
+            // Lee la primera línea (cabecera) y la descarta
+            getline(archivo, linea);
 
-        while (getline(archivo, linea)) {
-            stringstream llave(linea);
+            int contador = 0;
+            const int clientesPorPagina = 20;
+            bool mostrarMas = true;
 
-            getline(llave, ci, ';');
-            getline(llave, client, ';');
-            getline(llave, account_number, ';');
-            getline(llave, account_type, ';');
-            getline(llave, suspend, ';');
-            getline(llave, balance, ';');
+            while (getline(archivo, linea)) {
+                stringstream llave(linea);
 
+                getline(llave, ci, ';');
+                getline(llave, client, ';');
+                getline(llave, account_number, ';');
+                getline(llave, account_type, ';');
+                getline(llave, suspend, ';');
+                getline(llave, balance, ';');
 
-            cout << "----------------------------------------------------" << endl;
-            cout << "ID: " << ci << endl;
-            cout << "Cliente: " << client << endl;
-            cout << "Numero de cuenta: " << account_number << endl;
-            cout << "Tipo de cuenta: " << account_type << endl;
-            cout << "Estado de Cuenta: " << suspend << endl;
-            cout<<"Saldo Disponible: "<<balance<<endl;
-            cout << "----------------------------------------------------" << endl;
+                cout << "----------------------------------------------------" << endl;
+                cout << "ID: " << ci << endl;
+                cout << "Cliente: " << client << endl;
+                cout << "Numero de cuenta: " << account_number << endl;
+                cout << "Tipo de cuenta: " << account_type << endl;
+                cout << "Estado de Cuenta: " << suspend << endl;
+                cout << "Saldo Disponible: " << balance << endl;
+                cout << "----------------------------------------------------" << endl;
+
+                contador++;
+
+                if (contador % clientesPorPagina == 0) {
+                    cout << "Desea ver mas clientes? (S/N): ";
+                    char respuesta;
+                    cin >> respuesta;
+
+                    if (toupper(respuesta) != 'S') {
+                        mostrarMas = false;
+                        break;
+                    }
+                }
+            }
+
+            if (mostrarMas) {
+                cout << "Fin de la lista de clientes." << endl;
+            }
+
+            archivo.close();
         }
-
-        archivo.close();
+    } catch (const runtime_error& e) {
+        cerr << "Error: " << e.what() << endl;
+    } catch (...) {
+        cerr << "Error desconocido al procesar el archivo." << endl;
     }
 }
-
 
 
 void menu(){
