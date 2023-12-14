@@ -656,17 +656,17 @@ void agregar_cliente() {
         }
 
         cout << "Ingrese el tipo de cuenta (Cuenta Debito o Cuenta Credito): " << endl;
-        cout << "Coloque 'credit' o 'debit': " << endl;
+        cout << "Coloque 'current' o 'debit': " << endl;
         getline(cin, account_type);
 
         // Verificar si la entrada del usuario es válida
-        while (account_type != "credit" && account_type != "debit") {
+        while (account_type != "current" && account_type != "debit") {
             cout << "Tipo de cuenta no valido. Por favor, ingrese 'credit' o 'debit':" << endl;
             getline(cin, account_type);
         }
 
-        if (existe_cliente("", "", account_type, lectura)) {
-            cout << "Ya existe un cliente con ese tipo de cuenta. Por favor ingrese uno valido." << endl;
+        if (existe_cliente("", "", account_number, lectura)) {
+            cout << "Ya existe un cliente con ese numero de cuenta. Por favor ingrese uno valido." << endl;
             return;
         }
 
