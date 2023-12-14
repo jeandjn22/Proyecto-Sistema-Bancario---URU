@@ -665,8 +665,8 @@ void agregar_cliente() {
             getline(cin, account_type);
         }
 
-        if (existe_cliente("", "", account_number, lectura)) {
-            cout << "Ya existe un cliente con ese numero de cuenta. Por favor ingrese uno valido." << endl;
+        if (existe_cliente("", "", account_type, lectura)) {
+            cout << "Ya existe un cliente con ese tipo de cuenta. Por favor ingrese uno valido." << endl;
             return;
         }
 
