@@ -805,7 +805,7 @@ void menu(){
         while (cin.fail() || opcion < 0) {
             cin.clear(); // Limpiar el estado de error
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar el resto de la línea
-            cout << "Opcion Invalida. Selecciona una correcta: ";
+            cout << "Opcion Invalida. Selecciona una correcta: "<<endl;
             cin >> opcion;
         }
 
