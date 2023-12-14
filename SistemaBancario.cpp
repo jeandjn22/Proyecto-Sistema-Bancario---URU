@@ -386,6 +386,11 @@ void transferencia() {
         return;
     }
 
+    if(cuentaOrigen == cuentaDestino){
+        cout<<"No se puede transferir a su mismo numero de cuenta."<<endl;
+        return;
+    }
+
     // Realizar la transferencia y actualizar los saldos
     for (auto& linea : lineasClientes) {
         stringstream ss(linea);
